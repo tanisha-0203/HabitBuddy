@@ -27,31 +27,35 @@ public class HabitBuddyApp {
             String choice = in.nextLine().trim();
 
             switch (choice) {
-                case "1" -> addHabit(service);
-                case "2" -> listHabits(service);
-                case "3" -> markToday(service);
-                case "4" -> deleteHabit(service);
-                case "5" -> saveNow(service);
-                case "6" -> {
-                    saveAndExit(service);
-                    running = false;
-                }
-                default -> System.out.println("Invalid choice\n");
-            }
+    case "1" -> addHabit(service);
+    case "2" -> listHabits(service);
+    case "3" -> markToday(service);
+    case "4" -> deleteHabit(service);
+    case "5" -> saveNow(service);
+    case "6" -> showHelp();
+    case "7" -> {
+        saveAndExit(service);
+        running = false;
+    }
+    default -> System.out.println("Invalid choice\n");
+}
+
         }
         System.out.println("Bye! ✅");
     }
 
-    private static void printMenu() {
-        System.out.println("===== HabitBuddy Menu =====");
-        System.out.println("1) Add habit");
-        System.out.println("2) List habits");
-        System.out.println("3) Mark today done (by ID)");
-        System.out.println("4) Delete habit (by ID)");
-        System.out.println("5) Save now");
-        System.out.println("6) Save and Exit");
-        System.out.print("Choose: ");
-    }
+   private static void printMenu() {
+    System.out.println("===== HabitBuddy Menu =====");
+    System.out.println("1) Add habit");
+    System.out.println("2) List habits");
+    System.out.println("3) Mark today done (by ID)");
+    System.out.println("4) Delete habit (by ID)");
+    System.out.println("5) Save now");
+    System.out.println("6) Help");
+    System.out.println("7) Save and Exit");
+    System.out.print("Choose: ");
+}
+
 
     private static void addHabit(HabitService service) {
         System.out.print("Name: ");
@@ -115,6 +119,17 @@ int id = Integer.parseInt(in.nextLine().trim());
             System.out.println("Failed to save habits: " + e.getMessage());
         }
     }
+    private static void showHelp() {
+    System.out.println("\n=== HabitBuddy Help ===");
+    System.out.println("1) Add habit - Add a new habit with name and frequency.");
+    System.out.println("2) List habits - List all habits with details and today's completion.");
+    System.out.println("3) Mark today done - Mark a habit done for today by numeric ID.");
+    System.out.println("4) Delete habit - Delete a habit by numeric ID.");
+    System.out.println("5) Save now - Save all habits and progress.");
+    System.out.println("6) Help - Display this help message.");
+    System.out.println("7) Save and Exit - Save progress and exit the app.\n");
+}
+
 
     private static void saveAndExit(HabitService service) {
         try {
