@@ -1,6 +1,9 @@
-com\habitbuddy\HabitBuddyApp.class
+com\habitbuddy\HabitService$1.class
 com\habitbuddy\App.class
 com\habitbuddy\Habit.class
+com\habitbuddy\Frequency.class
+com\habitbuddy\HabitStorage.class
+com\habitbuddy\HabitBuddyApp.class
 com\habitbuddy\HabitService.class
 com\habitbuddy\HabitStorage$1.class
-com\habitbuddy\HabitStorage.class
+com\habitbuddy\LocalDateAdapter.class

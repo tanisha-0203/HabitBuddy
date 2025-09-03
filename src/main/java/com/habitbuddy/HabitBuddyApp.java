@@ -1,76 +1,127 @@
 package com.habitbuddy;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
-public class HabitBuddyApp {
-    public static void main(String[] args) {
-        HabitService service = new HabitService();
-        Scanner sc = new Scanner(System.in);
-        while (true) {
-            System.out.println("\n===== HabitBuddy Menu =====");
-            System.out.println("1. Add Habit");
-            System.out.println("2. View Habits");
-            System.out.println("3. Mark Habit Done");
-            System.out.println("4. Delete Habit");
-            System.out.println("5. Help");
-            System.out.println("6. Exit");
-            System.out.print("Enter choice: ");
 
-            int choice;
-            try {
-                choice = Integer.parseInt(sc.nextLine().trim());
-            } catch (Exception e) {
-                System.out.println("Please enter a valid number.");
-                continue;
-            }
+public class HabitBuddyApp {
+    
+    private static final Scanner in = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        System.out.println("\n=== HabitBuddy (CLI) ===\n");
+
+        HabitService service = new HabitService();
+
+        try {
+            service.load();
+        } catch (IOException e) {
+            System.err.println("(No data yet)");
+        }
+
+        boolean running = true;
+
+        while (running) {
+            printMenu();
+            String choice = in.nextLine().trim();
 
             switch (choice) {
-                case 1:
-                    System.out.print("Enter habit name: ");
-                    String name = sc.nextLine();
-                    if (name.isBlank()) {
-                        System.out.println("Habit name cannot be empty.");
-                        break;
-                    }
-                    service.addHabit(name);
-                    break;
-                case 2:
-                    service.viewHabits();
-                    break;
-                case 3:
-                    System.out.print("Enter habit ID to mark done: ");
-                    try {
-                        int idUpdate = Integer.parseInt(sc.nextLine().trim());
-                        service.markHabitDone(idUpdate);
-                    } catch (Exception e) {
-                        System.out.println("Please enter a valid number.");
-                    }
-                    break;
-                case 4:
-                    System.out.print("Enter habit ID to delete: ");
-                    try {
-                        int idDelete = Integer.parseInt(sc.nextLine().trim());
-                        service.deleteHabit(idDelete);
-                    } catch (Exception e) {
-                        System.out.println("Please enter a valid number.");
-                    }
-                    break;
-                case 5:
-                    System.out.println("Help:");
-                    System.out.println(" - Add Habit: Creates a new habit with a name.");
-                    System.out.println(" - View Habits: Shows all habits with streaks and stats.");
-                    System.out.println(" - Mark Habit Done: Increases your streak for the chosen habit.");
-                    System.out.println(" - Delete Habit: Removes the habit forever.");
-                    System.out.println(" - Streak = consecutive days marked done.");
-                    System.out.println(" - Total Completions = all times marked done.");
-                    System.out.println(" - Longest Streak = highest consecutive streak for a habit.");
-                    break;
-                case 6:
-                    System.out.println("Goodbye! Stay consistent with your habits ✨");
-                    return;
-                default:
-                    System.out.println("Invalid choice, try again!");
+                case "1" -> addHabit(service);
+                case "2" -> listHabits(service);
+                case "3" -> markToday(service);
+                case "4" -> deleteHabit(service);
+                case "5" -> saveNow(service);
+                case "6" -> {
+                    saveAndExit(service);
+                    running = false;
+                }
+                default -> System.out.println("Invalid choice\n");
             }
+        }
+        System.out.println("Bye! ✅");
+    }
+
+    private static void printMenu() {
+        System.out.println("===== HabitBuddy Menu =====");
+        System.out.println("1) Add habit");
+        System.out.println("2) List habits");
+        System.out.println("3) Mark today done (by ID)");
+        System.out.println("4) Delete habit (by ID)");
+        System.out.println("5) Save now");
+        System.out.println("6) Save and Exit");
+        System.out.print("Choose: ");
+    }
+
+    private static void addHabit(HabitService service) {
+        System.out.print("Name: ");
+        String name = in.nextLine().trim();
+
+        System.out.print("Frequency (DAILY/WEEKLY): ");
+        String f = in.nextLine().trim().toUpperCase();
+
+        Frequency freq = "WEEKLY".equals(f) ? Frequency.WEEKLY : Frequency.DAILY;
+
+        var habit = service.addHabit(name, freq);
+        System.out.println("Added: " + habit + "\n");
+    }
+
+   private static void listHabits(HabitService service) {
+    List<Habit> list = service.listHabits();
+    if (list.isEmpty()) {
+        System.out.println("No habits yet.\n");
+        return;
+    }
+
+    System.out.println("ID  Name (Frequency)            Started     Today Completed");
+    System.out.println("-----------------------------------------------------------");
+
+    int id = 1;
+    for (Habit habit : list) {
+        boolean completedToday = habit.isCompletedOn(java.time.LocalDate.now());
+        String completedMark = completedToday ? "Yes" : "No";
+
+        System.out.printf("%-3d %-25s %-11s %s%n",
+                id++,
+                habit.getName() + " (" + habit.getFrequency() + ")",
+                habit.getStartDate(),
+                completedMark);
+    }
+    System.out.println();
+}
+
+
+    private static void markToday(HabitService service) {
+       System.out.print("Enter habit ID: ");
+int id = Integer.parseInt(in.nextLine().trim());
+// Use id to call service methods
+       boolean ok = service.markToday(id);
+       System.out.println(ok ? "Marked today ✅\n" : "Not found ❌\n");
+    }
+
+    private static void deleteHabit(HabitService service) {
+        System.out.print("Enter habit ID: ");
+        int id = Integer.parseInt(in.nextLine().trim());
+
+        boolean ok = service.deleteHabit(id);
+        System.out.println(ok ? "Deleted ✅\n" : "Not found ❌\n");
+    }
+
+    private static void saveNow(HabitService service) {
+        try {
+            service.save();
+            System.out.println("Habits saved successfully!\n");
+        } catch (IOException e) {
+            System.out.println("Failed to save habits: " + e.getMessage());
+        }
+    }
+
+    private static void saveAndExit(HabitService service) {
+        try {
+            service.save();
+            System.out.println("Habits saved successfully! Exiting...");
+        } catch (IOException e) {
+            System.out.println("Failed to save habits: " + e.getMessage());
         }
     }
 }

@@ -1,4 +1,4 @@
-# Created at 2025-09-03T16:16:47.689
+# Created at 2025-09-03T17:05:56.931
 Boot Manifest-JAR contains absolute paths in classpath 'D:\habitbuddy\target\test-classes'
 Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
 'other' has different root
