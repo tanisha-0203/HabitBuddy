@@ -39,7 +39,8 @@ public class HabitService {
         for (Habit h : habits) {
             if (h.getId() == id) {
                 h.incrementStreak();
-                HabitStorage.save("Habit updated! Streak = " + h.getStreak() + " days");
+                HabitStorage.save(habits);
+                System.out.println("Habit updated! Streak = " + h.getStreak() + " days");
                 return;
             }
         }
@@ -53,7 +54,8 @@ public class HabitService {
             Habit h = it.next();
             if (h.getId() == id) {
                 it.remove();
-                HabitStorage.save("Habit deleted successfully!");
+                HabitStorage.save(habits);
+                System.out.println("Habit deleted successfully!");
                 return;
             }
         }

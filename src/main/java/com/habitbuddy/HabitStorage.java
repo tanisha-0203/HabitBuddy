@@ -17,23 +17,11 @@ public class HabitStorage {
         }
     }
 
-    // import com.google.gson.reflect.TypeToken;
-// ...
-
-public static List<Habit> load() {
+    public static List<Habit> load() {
     try (Reader reader = new FileReader(FILE)) {
         return new Gson().fromJson(reader, new TypeToken<List<Habit>>(){}.getType());
     } catch (IOException e) {
         return null;
     }
 }
-
-
-    // public static List<Habit> load() {
-    //     try (Reader reader = new FileReader(FILE)) {
-    //         return new Gson().fromJson(reader, new TypeToken<List<Habit>>(){}.getType());
-    //     } catch (IOException e) {
-    //         return null;
-    //     }
-    // }
 }
