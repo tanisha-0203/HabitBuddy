@@ -1,3 +1,6 @@
 com\habitbuddy\HabitBuddyApp.class
 com\habitbuddy\App.class
 com\habitbuddy\Habit.class
+com\habitbuddy\HabitService.class
+com\habitbuddy\HabitStorage$1.class
+com\habitbuddy\HabitStorage.class

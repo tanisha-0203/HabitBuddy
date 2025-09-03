@@ -37,7 +37,7 @@ public class Habit {
 
     @Override
     public String toString() {
-        return id + ". " + name + " – Streak: " + streak + " days"
+        return id + ". " + name + " - Streak: " + streak + " days"
              + " | Total Completions: " + totalCompletions
              + " | Longest Streak: " + longestStreak;
     }
